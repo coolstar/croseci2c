@@ -694,6 +694,14 @@ IN PWDFDEVICE_INIT DeviceInit
 		return status;
 	}
 
+	{
+		WDF_DEVICE_STATE deviceState;
+		WDF_DEVICE_STATE_INIT(&deviceState);
+
+		deviceState.NotDisableable = WdfFalse;
+		WdfDeviceSetDeviceState(device, &deviceState);
+	}
+
 	devContext = GetDeviceContext(device);
 
 	devContext->FxDevice = device;
