@@ -6,7 +6,7 @@
 ;    croseci2c.inf
 ;
 ;Abstract:
-;    INF file for installing the CR50 I2C Driver
+;    INF file for installing the Chrome EC I2C Driver
 ;
 ;
 ;--*/
