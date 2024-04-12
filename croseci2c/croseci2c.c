@@ -604,8 +604,12 @@ VOID OnSpbIoRead(
 {
 	PCROSECI2C_CONTEXT pDevice = GetDeviceContext(SpbController);
 
+	WdfDeviceStopIdle(pDevice->FxDevice, TRUE);
+
 	NTSTATUS status = ec_i2c_xfer(pDevice, SpbTarget, SpbRequest, 1);
 	SpbRequestComplete(SpbRequest, status);
+
+	WdfDeviceResumeIdle(pDevice->FxDevice);
 }
 
 VOID OnSpbIoWrite(
@@ -617,8 +621,12 @@ VOID OnSpbIoWrite(
 {
 	PCROSECI2C_CONTEXT pDevice = GetDeviceContext(SpbController);
 
+	WdfDeviceStopIdle(pDevice->FxDevice, TRUE);
+
 	NTSTATUS status = ec_i2c_xfer(pDevice, SpbTarget, SpbRequest, 1);
 	SpbRequestComplete(SpbRequest, status);
+
+	WdfDeviceResumeIdle(pDevice->FxDevice);
 }
 
 VOID OnSpbIoSequence(
@@ -628,11 +636,14 @@ VOID OnSpbIoSequence(
 	_In_ ULONG TransferCount
 )
 {
-
 	PCROSECI2C_CONTEXT pDevice = GetDeviceContext(SpbController);
+
+	WdfDeviceStopIdle(pDevice->FxDevice, TRUE);
 
 	NTSTATUS status = ec_i2c_xfer(pDevice, SpbTarget, SpbRequest, TransferCount);
 	SpbRequestComplete(SpbRequest, status);
+
+	WdfDeviceResumeIdle(pDevice->FxDevice);
 }
 
 NTSTATUS
@@ -732,6 +743,15 @@ IN PWDFDEVICE_INIT DeviceInit
 	WDF_OBJECT_ATTRIBUTES_INIT_CONTEXT_TYPE(&targetAttributes, PBC_TARGET);
 
 	SpbControllerSetTargetAttributes(devContext->FxDevice, &targetAttributes);
+
+	WDF_DEVICE_POWER_POLICY_IDLE_SETTINGS IdleSettings;
+
+	WDF_DEVICE_POWER_POLICY_IDLE_SETTINGS_INIT(&IdleSettings, IdleCannotWakeFromS0);
+	IdleSettings.IdleTimeoutType = SystemManagedIdleTimeoutWithHint;
+	IdleSettings.IdleTimeout = 1000;
+	IdleSettings.Enabled = WdfTrue;
+
+	WdfDeviceAssignS0IdleSettings(devContext->FxDevice, &IdleSettings);
 
 	return status;
 }
