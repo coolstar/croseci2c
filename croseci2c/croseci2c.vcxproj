@@ -166,6 +166,9 @@
     <ClCompile Include="croseci2c.c" />
     <ClCompile Include="mdlchain.c" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="croseci2c.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
