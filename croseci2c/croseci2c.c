@@ -604,12 +604,8 @@ VOID OnSpbIoRead(
 {
 	PCROSECI2C_CONTEXT pDevice = GetDeviceContext(SpbController);
 
-	WdfDeviceStopIdle(pDevice->FxDevice, TRUE);
-
 	NTSTATUS status = ec_i2c_xfer(pDevice, SpbTarget, SpbRequest, 1);
 	SpbRequestComplete(SpbRequest, status);
-
-	WdfDeviceResumeIdle(pDevice->FxDevice);
 }
 
 VOID OnSpbIoWrite(
@@ -621,12 +617,8 @@ VOID OnSpbIoWrite(
 {
 	PCROSECI2C_CONTEXT pDevice = GetDeviceContext(SpbController);
 
-	WdfDeviceStopIdle(pDevice->FxDevice, TRUE);
-
 	NTSTATUS status = ec_i2c_xfer(pDevice, SpbTarget, SpbRequest, 1);
 	SpbRequestComplete(SpbRequest, status);
-
-	WdfDeviceResumeIdle(pDevice->FxDevice);
 }
 
 VOID OnSpbIoSequence(
@@ -638,12 +630,8 @@ VOID OnSpbIoSequence(
 {
 	PCROSECI2C_CONTEXT pDevice = GetDeviceContext(SpbController);
 
-	WdfDeviceStopIdle(pDevice->FxDevice, TRUE);
-
 	NTSTATUS status = ec_i2c_xfer(pDevice, SpbTarget, SpbRequest, TransferCount);
 	SpbRequestComplete(SpbRequest, status);
-
-	WdfDeviceResumeIdle(pDevice->FxDevice);
 }
 
 NTSTATUS
